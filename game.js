@@ -36,7 +36,7 @@
 	}
 
 	function rand(min, max) {
-		return min + Math.floor(Math.random () * (max - min));
+		return min + Math.random() * (max - min);
 	}
 
 	function bufferImage(src, width, height, callback) {
@@ -62,9 +62,10 @@
 		(function loop(time) {
 			repaint(loop);
 
-			var delta = time = lastUpdate;
+			var delta = time - lastUpdate;
 			states[state].update(delta);
 			states[state].render(ctx);
+			lastUpdate = time;
 		}(Date.now() - lastUpdate));
 
 		/* Render all emoticons */
@@ -75,14 +76,49 @@
 
 	/* Title screen */
 	states['title'] = (function () {
+		var clouds, Cloud;
+		Cloud = function () {
+			this.reset();
+			this.x = rand(0, width);
+		};
+
+		Cloud.prototype.reset = function () {
+			this.x = width;
+			this.y = rand(0, height);
+			this.vx = rand(-1.0, -2.0);
+		};
+
+		Cloud.prototype.update = function (delta) {
+			this.x += this.vx * (delta / 10);
+			if (this.x < -260) {
+				this.reset();
+			}
+		};
+
+		Cloud.prototype.render = function (ctx) {
+			ctx.drawImage(images.cloud, this.x, this.y);
+		};
+
+		clouds = createArray(10).map(function () {
+			return new Cloud();
+		});
+
 		return {
 			update: function (delta) {
+				clouds.forEach(function (cloud) {
+					cloud.update(delta);
+				});
 			},
 
 			render: function (ctx) {
 				ctx.fillStyle = '#30a1f0';
 				ctx.fillRect(0, 0, width, height);
-				ctx.drawImage(images.logo, 10, 10);
+
+				clouds.forEach(function (cloud) {
+					cloud.render(ctx);
+				});
+
+				ctx.drawImage(images.logo, 0, 0);
 			}
 		};
 	}());
