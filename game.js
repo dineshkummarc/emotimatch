@@ -73,6 +73,20 @@
 		});
 	}
 
+	/* Title screen */
+	states['title'] = (function () {
+		return {
+			update: function (delta) {
+			},
+
+			render: function (ctx) {
+				ctx.fillStyle = '#30a1f0';
+				ctx.fillRect(0, 0, width, height);
+				ctx.drawImage(images.logo, 10, 10);
+			}
+		};
+	}());
+
 	/* Load all images and render them into a canvas buffer */
 	(function () {
 		var count = 0, queue = [];
