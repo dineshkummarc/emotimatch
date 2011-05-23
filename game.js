@@ -1,4 +1,4 @@
-(function () {
+(function (window, document) {
 	var images, emotes, repaint, width, height, states, state;
 	emotes = ['angry', 'bigsmile', 'blush', 'confused', 'cool', 'cry', 'eek', 'important', 'kiss', 'lol', 'neutral', 'sad', 'sick', 'smile', 'surprised', 'think', 'tongue', 'twisted', 'wink'];
 	width = 640;
@@ -28,7 +28,7 @@
 
 	function createArray(length, defaultValue) {
 		var arr = [], j;
-		for (j = 0;j < length;j += 1) {
+		for (j = 0; j < length; j += 1) {
 			arr[j] = defaultValue;
 		}
 
@@ -75,7 +75,7 @@
 	}
 
 	/* Title screen */
-	states['title'] = (function () {
+	states.title = (function () {
 		var clouds, Cloud;
 		Cloud = function () {
 			this.reset();
@@ -157,4 +157,4 @@
 			});
 		});
 	}());
-}());
+}(this, this.document));
