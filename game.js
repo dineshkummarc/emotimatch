@@ -1,9 +1,22 @@
 (function () {
-	var images, emotes, width, height, ctx, states;
+	var images, emotes, repaint, width, height, states, state;
 	emotes = ['angry', 'bigsmile', 'blush', 'confused', 'cool', 'cry', 'eek', 'important', 'kiss', 'lol', 'neutral', 'sad', 'sick', 'smile', 'surprised', 'think', 'tongue', 'twisted', 'wink'];
 	width = 640;
 	height = 480;
 	states = {};
+
+	Date.now = Date.now || (function () {
+		return new Date().getTime();
+	}());
+
+	repaint = window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame ||
+		window.oRequestAnimationFrame ||
+		function (callback) {
+			window.setTimeout(function () {
+				callback(Date.now());
+			}, 20);
+		};
 
 	function createCanvas(width, height) {
 		var canvas = document.createElement('canvas');
@@ -38,9 +51,21 @@
 	}
 
 	function init() {
-		var canvas = createCanvas(640, 480);
+		var ctx, canvas, lastUpdate = Date.now();
+		canvas = createCanvas(640, 480);
 		ctx = canvas.getContext('2d');
 		document.body.appendChild(canvas);
+
+		state = 'title';
+
+		/* Set up render loop */
+		(function loop(time) {
+			repaint(loop);
+
+			var delta = time = lastUpdate;
+			states[state].update(delta);
+			states[state].render(ctx);
+		}(Date.now() - lastUpdate));
 
 		/* Render all emoticons */
 		emotes.forEach(function (emote, index) {
