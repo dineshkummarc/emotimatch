@@ -4,7 +4,7 @@
 	}
 
 	var game, images, emotes, repaint, width, height, states, state;
-	emotes = ['angry', 'bigsmile', 'blush', 'confused', 'cool', 'cry', 'eek', 'important', 'kiss', 'lol', 'neutral', 'sad', 'sick', 'smile', 'surprised', 'think', 'tongue', 'twisted', 'wink'];
+	emotes = ['angry', 'bigsmile', 'blush', 'confused', 'cool', 'cry', 'eek', 'kiss', 'lol', 'neutral', 'sad', 'sick', 'smile', 'surprised', 'think', 'tongue', 'twisted', 'wink', 'important'];
 	width = 640;
 	height = 480;
 	states = {};
@@ -41,6 +41,13 @@
 		queue.push({
 			name: 'cloud',
 			src: 'images/cloud.png'
+		});
+
+		emotes.forEach(function (emote) {
+			queue.push({
+				name: emote,
+				src: 'images/icon_' + emote + '.png'
+			});
 		});
 
 		queue.forEach(function (item) {
@@ -113,10 +120,17 @@
 				ctx.setColor('#30a1f0');
 				ctx.fillRect(0, 0, width, height);
 
+				/* Draw clouds */
 				clouds.forEach(function (cloud) {
 					cloud.render(ctx);
 				});
 
+				/* Draw emoticons */
+				emotes.forEach(function (emote, index) {
+					ctx.drawImage(images[emote], index * 64, height / 2);
+				});
+
+				/* Draw logo */
 				ctx.drawImage(images.logo, 0, 0);
 			}
 		};
